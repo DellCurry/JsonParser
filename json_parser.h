@@ -2,27 +2,27 @@
 #include<string>
 #include<stack>
 
-#include"JSONNode.h"
+#include"json_node.h"
 
-#include"TokenReader.h"
+#include"token_reader.h"
 
-typedef std::stack<json::JSONNode*> ParseStack;
+typedef std::stack<json::json_node*> parser_stack;
 
-class JSONParser
+class json_parser
 {
 public:
-	JSONParser(std::string&);
-	~JSONParser();
+	json_parser(std::string&);
+	~json_parser();
 
-    json::JSONNode* parse();
+    json::json_node* parse();
 
 private:
-    TokenReader* tokenReader;
+    token_reader* tk_reader;
 
     int status;
-    ParseStack* stack;
+    parser_stack* stack;
 
-    bool onStatus(int status);
+    bool on_status(int status);
 
     /**
      * Should read EOF for next token.

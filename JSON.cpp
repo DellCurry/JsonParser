@@ -2,16 +2,16 @@
 //
 
 #include <iostream>
-#include "JSONParser.h"
-#include "JSONNode.h"
+#include "json_parser.h"
+#include "json_node.h"
 using namespace std;
 using namespace json;
 int main()
 {
     string s ="{\"a\":{\"aa\":true},\"b\":[1,33],\"c\":null}";
-    JSONParser parser(s);
-    JSONNode* node = parser.parse();
-    NodeMap m = node->getNodeMap();
+    json_parser parser(s);
+    json_node* node = parser.parse();
+    node_map m = node->get_node_map();
     // cout<<node->getType()<<endl;
     // cout<<"size="<<m.size()<<endl;
     for (auto i:m){
@@ -22,18 +22,18 @@ int main()
 
 /*
 typedef enum {
-    END_DOCUMENT,0
-    BEGIN_OBJECT,1
-    END_OBJECT,2
-    BEGIN_ARRAY,3
-    END_ARRAY,4
-    SEP_COLON,5
-    SEP_COMMA,6
-    NUMBER,7
-    STRING,8
-    BOOLEAN,9
-    NUL10
-} Token;
+    END_JSON,
+    BEGIN_OBJ,
+    END_OBJ,
+    BEGIN_ARR,
+    END_ARR,
+    COLON,
+    COMMA,
+    NUMBER,
+    STRING,
+    BOOL,
+    NUL
+} token_type;
 */
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

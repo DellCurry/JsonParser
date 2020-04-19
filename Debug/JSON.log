@@ -1,0 +1,9 @@
+﻿  char_reader.cpp
+  JSON.cpp
+  json_node.cpp
+  json_parser.cpp
+  token_reader.cpp
+C:\Users\zhaohan\Desktop\Design in C++\JSON\token_reader.cpp(81,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\zhaohan\Desktop\Design in C++\JSON\token_reader.cpp(241,21): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  JSON.vcxproj -> C:\Users\zhaohan\Desktop\Design in C++\JSON\Debug\JSON.exe
