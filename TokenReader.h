@@ -11,8 +11,8 @@ public:
 
     Token readNext();
     bool BooleanReader();
-    int NumberReader();
-    string StringReader();
+    double NumberReader();
+    std::string StringReader();
     void NullReader();
 private:
     bool isSpace(char ch) return ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r';

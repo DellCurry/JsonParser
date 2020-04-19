@@ -5,7 +5,7 @@
 
 TokenReader::TokenReader(CharReader reader)
 {
-    this.reader = reader;
+    this->reader = reader;
 }
 
 TokenReader::readNext() {
@@ -61,7 +61,7 @@ TokenReader::readNext() {
 }
 
 bool TokenReader::BooleanReader() {
-    char ch = this.reader.next();
+    char ch = this->reader.next();
     char ch_move;
     std::string predict;
     if (ch == 't')
@@ -69,11 +69,11 @@ bool TokenReader::BooleanReader() {
     else if (ch == 'f')
         predict = "alse";
     else
-        throw "Unexpected boolean value";
+        throw "Unexpected boolean value " + ch;
     for (int i=0; i < predict.length(); i++) {
-        ch_move = this.reader.next();
+        ch_move = this->reader.next();
         if (ch_move != predict.at(i)) {
-            throw "Unexpected boolean value";
+            throw "Unexpected boolean value " + ch_move;
         }
     }
     return ch == 't';
@@ -85,7 +85,7 @@ std::string TokenReader::StringReader() {
     std::string str;
     char c = this->reader.next();
     if (c != '\"') {
-        throw "Unexpected sting value";
+        throw "Unexpected string value " + c;
     }
 
     while (this->reader.hasMore()) {
@@ -114,12 +114,12 @@ std::string TokenReader::StringReader() {
                     str.push_back('\f');
                     break;
                 default:
-                    throw "Unexpected string value";
+                    throw "Unexpected string value " + escape;
             }
         } else if (c == '\"') {
             break;
         } else if (c == '\r' || c == '\n')
-            throw "Unexpected string value '\r' or '\n'";
+            throw "Unexpected string value " + c;
         else
             str.push_back(c);
     }
@@ -128,9 +128,9 @@ std::string TokenReader::StringReader() {
 
 void TokenReader::NullReader() {
     for (int i=0; i < predict.length(); i++) {
-        ch_move = this.reader.next();
+        ch_move = this->reader.next();
         if (ch_move != predict.at(i)) {
-            throw "Unexpected null value";
+            throw "Unexpected null value " + ch_move;
         }
     }
 }
