@@ -1,7 +1,12 @@
 #pragma once
 #include<string>
+#include<stack>
 
 #include"JSONNode.h"
+
+#include"TokenReader.h"
+
+typedef std::stack<json::JSONNode*> ParseStack;
 
 class JSONParser
 {
@@ -9,63 +14,70 @@ public:
 	JSONParser();
 	~JSONParser();
 
-	JSONNode parse(std::string jsonStr);
+    json::JSONNode* parse();
 
 private:
+    TokenReader* tokenReader;
+
+    int status;
+    ParseStack* stack;
+
+    bool onStatus(int status);
+
     /**
      * Should read EOF for next token.
      */
-    static const int STATUS_EXPECT_END_DOCUMENT = 1 << 0;
+    static const int EXPECT_END_JSON = 1 << 0;
 
     /**
      * Should read "{" for next token.
      */
-    static const int STATUS_EXPECT_BEGIN_OBJECT = 1 << 1;
+    static const int EXPECT_BEGIN_OBJ = 1 << 1;
 
     /**
      * Should read "}" for next token.
      */
-    static const int STATUS_EXPECT_END_OBJECT = 1 << 2;
+    static const int EXPECT_END_OBJ = 1 << 2;
 
     /**
      * Should read object key for next token.
      */
-    static const int STATUS_EXPECT_OBJECT_KEY = 1 << 3;
+    static const int EXPECT_OBJ_KEY = 1 << 3;
 
     /**
      * Should read object value for next token.
      */
-    static const int STATUS_EXPECT_OBJECT_VALUE = 1 << 4;
+    static const int EXPECT_OBJ_VAL = 1 << 4;
 
     /**
      * Should read ":" for next token.
      */
-    static const int STATUS_EXPECT_COLON = 1 << 5;
+    static const int EXPECT_COLON = 1 << 5;
 
     /**
      * Should read "," for next token.
      */
-    static const int STATUS_EXPECT_COMMA = 1 << 6;
+    static const int EXPECT_COMMA = 1 << 6;
 
     /**
      * Should read "[" for next token.
      */
-    static const int STATUS_EXPECT_BEGIN_ARRAY = 1 << 7;
+    static const int EXPECT_BEGIN_ARR = 1 << 7;
 
     /**
      * Should read "]" for next token.
      */
-    static const int STATUS_EXPECT_END_ARRAY = 1 << 8;
+    static const int EXPECT_END_ARR = 1 << 8;
 
     /**
      * Should read array value for next token.
      */
-    static const int STATUS_EXPECT_ARRAY_VALUE = 1 << 9;
+    static const int EXPECT_ARR_VAL = 1 << 9;
 
     /**
      * Should read a single value for next token (must not be "{" or "[").
      */
-    static const int STATUS_EXPECT_SINGLE_VALUE = 1 << 10;
+    static const int EXPECT_SINGLE_VAL = 1 << 10;
 
 };
 

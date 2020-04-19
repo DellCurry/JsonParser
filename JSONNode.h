@@ -4,6 +4,7 @@
 #include<vector>
 
 namespace json{
+
     class JSONNode;
     typedef std::unordered_map<std::string, JSONNode*> NodeMap;
     typedef std::vector<JSONNode*> NodeVec;
@@ -21,8 +22,20 @@ namespace json{
     class JSONNode
     {
     public:
-        JSONNode();
+        JSONNode(Type type);
         ~JSONNode();
+
+        static JSONNode* createNumNode(int num);
+        static JSONNode* createStrNode(std::string& str);
+        static JSONNode* createBoolNode(bool b);
+        static JSONNode* createNullNode();
+        static JSONNode* createArrayNode();
+        static JSONNode* createObjectNode();
+
+        std::string getString();
+        Type getType();
+        void addToVec(JSONNode* node);
+        void addToMap(std::string key, JSONNode* node);
     private:
         Type type;
         std::string name;
