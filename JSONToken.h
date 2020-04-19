@@ -1,16 +1,16 @@
-//
-// Created by yvett on 4/19/2020.
-//
+#pragma once
 
-#ifndef JSONPARSER_TOKEN_H
-#define JSONPARSER_TOKEN_H
+typedef enum {
+    END_DOCUMENT,
+    BEGIN_OBJECT,
+    END_OBJECT,
+    BEGIN_ARRAY,
+    END_ARRAY,
+    SEP_COLON,
+    SEP_COMMA,
+    NUMBER,
+    STRING,
+    BOOLEAN,
+    NULL
+} Token;
 
-
-
-class TOKEN {
-
-};
-
-
-
-#endif //JSONPARSER_TOKEN_H
