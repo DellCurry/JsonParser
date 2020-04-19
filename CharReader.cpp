@@ -1,5 +1,5 @@
 #include "CharReader.h"
-
+using namesapce std;
 CharReader::CharReader(string& s){
     jsonStr = s;
     pos = 0;

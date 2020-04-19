@@ -14,3 +14,10 @@ typedef enum {
     NULL
 } Token;
 
+typedef enum {
+    INT_PART,
+    FRA_PART,
+    EXP_PART,
+    NUM_END
+} Number_PART;
+

@@ -1,29 +1,23 @@
-#ifndef ChARREADER_H
-#define CHARREADER_H
-
 #pragma once
 #include <string>
 #include <iostream>
 #include <string>
-using namespace std;
 class CharReader
 {
 public:
-	CharReader(string& s);
+	CharReader(std::string& s);
 	~CharReader();
 
 	char next();
 	char peek();
-	string next(int);
+	std::string next(int);
 	bool hasMore();
 	bool hasMore(int);
 	void catchError(int);
 
 private:
-	string jsonStr;
+	std::string jsonStr;
 	int pos;
 	int size;
 
 };
-
-#endif
