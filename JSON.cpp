@@ -2,10 +2,14 @@
 //
 
 #include <iostream>
-#include "JSONNode.h"
+#include "JSONParser.h"
+using namespace std;
 int main()
 {
-    std::cout << "Hello World!\n";
+    string s ="{\"a\":{\"aa\":true}}";
+    JSONParser parser(s);
+    parser.parse();
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

@@ -16,7 +16,7 @@ namespace json{
         return node;
     }
 
-    JSONNode* JSONNode::createStrNode(std::string& str) {
+    JSONNode* JSONNode::createStrNode(std::string str) {
         JSONNode* node = new JSONNode(STRING);
         node->str = str;
         return node;

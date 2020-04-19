@@ -26,7 +26,7 @@ namespace json{
         ~JSONNode();
 
         static JSONNode* createNumNode(int num);
-        static JSONNode* createStrNode(std::string& str);
+        static JSONNode* createStrNode(std::string str);
         static JSONNode* createBoolNode(bool b);
         static JSONNode* createNullNode();
         static JSONNode* createArrayNode();

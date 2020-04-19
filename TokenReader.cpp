@@ -4,9 +4,9 @@
 #include "TokenReader.h"
 
 
-TokenReader::TokenReader(CharReader& reader)
+TokenReader::TokenReader(std::string& s)
 {
-    this->reader = reader;
+    reader = CharReader(s);
 }
 
 static bool isSpace(char ch) {

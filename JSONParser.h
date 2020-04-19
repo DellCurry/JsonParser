@@ -11,7 +11,7 @@ typedef std::stack<json::JSONNode*> ParseStack;
 class JSONParser
 {
 public:
-	JSONParser();
+	JSONParser(std::string&);
 	~JSONParser();
 
     json::JSONNode* parse();
@@ -81,10 +81,3 @@ private:
 
 };
 
-JSONParser::JSONParser()
-{
-}
-
-JSONParser::~JSONParser()
-{
-}

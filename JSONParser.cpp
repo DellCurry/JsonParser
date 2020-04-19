@@ -9,6 +9,14 @@ string StringReader();
 void NullReader();
 */
 
+
+JSONParser::JSONParser(std::string& s){
+    tokenReader = new TokenReader(s);
+}
+
+JSONParser::~JSONParser(){
+    delete tokenReader;
+}
 // TODO: maybe need to distinguish the string for key and the original string
 
 json::JSONNode* JSONParser::parse() {
@@ -36,6 +44,7 @@ json::JSONNode* JSONParser::parse() {
 				continue;
 			}
 			// TODO: throw exception
+			throw std::runtime_error("boolean failed");
 		case NUMBER:
 			if (onStatus(EXPECT_SINGLE_VAL)) {
 				stack->push(json::JSONNode::createBoolNode(tokenReader->NumberReader()));
@@ -55,6 +64,7 @@ json::JSONNode* JSONParser::parse() {
 				continue;
 			}
 			// TODO: throw exception
+			throw std::runtime_error("number failed");
 		case NUL:
 			if (onStatus(EXPECT_SINGLE_VAL)) {
 				stack->push(json::JSONNode::createNullNode());
@@ -74,6 +84,7 @@ json::JSONNode* JSONParser::parse() {
 				continue;
 			}
 			// TODO: throw exception
+			throw std::runtime_error("null failed");
 		case STRING:
 			if (onStatus(EXPECT_SINGLE_VAL)) {
 				stack->push(json::JSONNode::createStrNode(tokenReader->StringReader()));
@@ -98,12 +109,14 @@ json::JSONNode* JSONParser::parse() {
 				continue;
 			}
 			// TODO: throw exception
+			throw std::runtime_error("string failed");
 		case SEP_COLON:
 			if (status == EXPECT_COLON) {
 				status = EXPECT_OBJ_VAL | EXPECT_BEGIN_OBJ | EXPECT_BEGIN_ARR;
 				continue;
 			}
 			// TODO: throw exception
+			throw std::runtime_error("sep colon failed");
 		case SEP_COMMA:
 			if (onStatus(EXPECT_COMMA)) {
 				if (onStatus(EXPECT_END_OBJ)) {
@@ -116,6 +129,7 @@ json::JSONNode* JSONParser::parse() {
 				}
 			}
 			// TODO: throw exception
+			throw std::runtime_error("sep comma failed");
 		case BEGIN_ARRAY:
 			if (onStatus(EXPECT_BEGIN_ARR)) {
 				stack->push(json::JSONNode::createArrayNode());
@@ -123,6 +137,7 @@ json::JSONNode* JSONParser::parse() {
 				continue;
 			}
 			// TODO: throw exception
+			throw std::runtime_error("begin array failed");
 		case BEGIN_OBJECT:
 			if (onStatus(EXPECT_BEGIN_OBJ)) {
 				stack->push(json::JSONNode::createObjectNode());
@@ -130,6 +145,7 @@ json::JSONNode* JSONParser::parse() {
 				continue;
 			}
 			// TODO: throw exception
+			throw std::runtime_error("begin object failed");
 		case END_ARRAY:
 			if (onStatus(EXPECT_END_ARR)) {
 				if (stack->size() == 1) {
@@ -155,6 +171,7 @@ json::JSONNode* JSONParser::parse() {
 				}
 			}
 			// TODO: throw exception
+			throw std::runtime_error("end array failed");
 		case END_OBJECT:
 			if (onStatus(EXPECT_END_OBJ)) {
 				if (stack->size() == 1) {
@@ -180,6 +197,7 @@ json::JSONNode* JSONParser::parse() {
 				}
 			}
 			// TODO: throw exception
+			throw std::runtime_error("end object failed");
 		case END_DOCUMENT:
 			if (onStatus(EXPECT_END_JSON)) {
 				if (stack->size() == 1) {
@@ -187,10 +205,12 @@ json::JSONNode* JSONParser::parse() {
 				}
 			}
 			// TODO: throw exception 
+			throw std::runtime_error("end document failed");
 		default:
 			break;
 		}
 	}
+	delete stack;
 }
 
 inline bool JSONParser::onStatus(int status)

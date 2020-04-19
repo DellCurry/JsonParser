@@ -7,7 +7,7 @@ class TokenReader
 {
 public:
     CharReader reader;
-	TokenReader(CharReader& reader);
+	TokenReader(std::string&);
 	~TokenReader();
     Token readNext();
     bool BooleanReader();
