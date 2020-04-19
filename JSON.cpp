@@ -2,20 +2,35 @@
 //
 
 #include <iostream>
+#include <stack>
 #include "JSONParser.h"
 #include "JSONNode.h"
 using namespace std;
 using namespace json;
+
 int main()
 {
     string s ="{\"a\":{\"aa\":true},\"b\":[1,33],\"c\":null}";
     JSONParser parser(s);
     JSONNode* node = parser.parse();
-    NodeMap m = node->getNodeMap();
     // cout<<node->getType()<<endl;
     // cout<<"size="<<m.size()<<endl;
-    for (auto i:m){
-        cout<<i.first<<endl;
+    NodeMap m;
+    stack<JSONNode*> mystack;
+    mystack.push(node);
+    int loop = 0;
+    while(!mystack.empty()){
+
+        JSONNode *n = mystack.top();
+        mystack.pop();
+        if (n->getType() == OBJECT)
+        {
+            m = n->getNodeMap();
+            for (auto i:m){
+                cout<<i.first<<endl;
+                mystack.push(i.second);
+            }
+        }
     }
 
 }
