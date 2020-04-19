@@ -15,10 +15,15 @@ public:
     string StringReader();
     void NullReader();
 private:
-    bool isSpace(char ch)
+    bool isSpace(char ch);
 };
 
-
+bool TokenReader::isSpace(char ch) {
+    if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+        return True
+    else
+        return False
+}
 
 TokenReader::TokenReader(CharReader reader)
 {
@@ -26,7 +31,9 @@ TokenReader::TokenReader(CharReader reader)
 }
 
 TokenReader::readNext() {
-
+    for (;;) {
+        
+    }
 }
 
 bool TokenReader::BooleanReader() {
