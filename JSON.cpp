@@ -2,7 +2,7 @@
 //
 
 #include <iostream>
-
+#include "JSONNode.h"
 int main()
 {
     std::cout << "Hello World!\n";
