@@ -23,7 +23,7 @@ TokenReader::readNext() {
             token = BEGIN_OBJECT;
             this->reader.next();
             break;
-        case '}:
+        case '}':
             token = END_OBJECT;
             this->reader.next();
             break;
@@ -54,7 +54,7 @@ TokenReader::readNext() {
             token = NUL;
             break;
     }
-    if ( c >= '0' && c <= '9' )
+    if ( c == '-' || (c >= '0' && c <= '9') )
         token = NUMBER;
 
     return token;
@@ -63,28 +63,77 @@ TokenReader::readNext() {
 bool TokenReader::BooleanReader() {
     char ch = this.reader.next();
     char ch_move;
-    string predict;
+    std::string predict;
     if (ch == 't')
         predict = "rue";
     else if (ch == 'f')
         predict = "alse";
     else
-        return -1;
+        throw "Unexpected boolean value";
     for (int i=0; i < predict.length(); i++) {
         ch_move = this.reader.next();
         if (ch_move != predict.at(i)) {
-            return -1;
+            throw "Unexpected boolean value";
+        }
+    }
+    return ch == 't';
+}
+
+int TokenReader::NumberReader() {}
+
+std::string TokenReader::StringReader() {
+    std::string str;
+    char c = this->reader.next();
+    if (c != '\"') {
+        throw "Unexpected sting value";
+    }
+
+    while (this->reader.hasMore()) {
+        c = this->reader.next();
+        if (c == '\\') {
+            char escape = this->reader.next();
+            switch (escape) {
+                case '\"':
+                case '\\':
+                case '/':
+                    str.push_back(escape);
+                    break;
+                case 'b:
+                    str.push_back('\b');
+                    break;
+                case 'f':
+                    str.push_back('\f');
+                    break;
+                case 'n':
+                    str.push_back('\f');
+                    break;
+                case 'r':
+                    str.push_back('\f');
+                    break;
+                case 't':
+                    str.push_back('\f');
+                    break;
+                default:
+                    throw "Unexpected string value";
+            }
+        } else if (c == '\"') {
+            break;
+        } else if (c == '\r' || c == '\n')
+            throw "Unexpected string value '\r' or '\n'";
+        else
+            str.push_back(c);
+    }
+    return str;
+}
+
+void TokenReader::NullReader() {
+    for (int i=0; i < predict.length(); i++) {
+        ch_move = this.reader.next();
+        if (ch_move != predict.at(i)) {
+            throw "Unexpected null value";
         }
     }
 }
-
-int TokenReader::NumberReader() {
-    
-}
-
-string TokenReader::StringReader() {}
-
-void TokenReader::NullReader() {}
 
 TokenReader::~TokenReader()
 {

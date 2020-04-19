@@ -11,6 +11,6 @@ typedef enum {
     NUMBER,
     STRING,
     BOOLEAN,
-    NULL
+    NUL
 } Token;
 
