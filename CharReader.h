@@ -5,9 +5,10 @@
 class CharReader
 {
 public:
+	CharReader();
 	CharReader(std::string& s);
+	CharReader(CharReader& reader);
 	~CharReader();
-
 	char next();
 	char peek();
 	std::string next(int);

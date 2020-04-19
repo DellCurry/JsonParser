@@ -1,13 +1,19 @@
 #include <string>
-#include <math>
+#include <cmath>
 #include "JSONToken.h"
 #include "TokenReader.h"
-#include "CharReader.h"
 
 
 TokenReader::TokenReader(CharReader& reader)
 {
-    this.reader = reader;
+    this->reader = reader;
+}
+
+static bool isSpace(char ch) {
+    if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+        return true;
+    else
+        return false;
 }
 
 Token TokenReader::readNext() {
@@ -45,45 +51,47 @@ Token TokenReader::readNext() {
             token = END_ARRAY;
             this->reader.next();
             break;
-        case '\"':
+        case '"':
             token = STRING;
             break;
         case 't':
         case 'f':
-            token = bool;
+            token = BOOLEAN;
             break;
         case 'n':
             token = NUL;
             break;
     }
-    if ( c >= '0' && c <= '9' )
+    if ( c == '-' || (c >= '0' && c <= '9') )
         token = NUMBER;
 
     return token;
 }
 
-bool TokenReader::boolReader() {
-    char ch = this.reader.next();
+bool TokenReader::BooleanReader() {
+    char ch = reader.next();
     char ch_move;
-    string predict;
+    std::string predict;
     if (ch == 't')
         predict = "rue";
     else if (ch == 'f')
         predict = "alse";
-    else
-        return -1;
+    else{
+        throw std::runtime_error("Unexpected boolean value");
+    }
     for (int i=0; i < predict.length(); i++) {
-        ch_move = this.reader.next();
+        ch_move = this->reader.next();
         if (ch_move != predict.at(i)) {
-            return -1;
+            throw std::runtime_error("Unexpected boolean value");
         }
     }
+    return ch == 't';
 }
 
 double TokenReader::NumberReader() {
-    string intPart; 
-	string fraPart; 
-	string expPart;
+    std::string intPart; 
+	std::string fraPart; 
+	std::string expPart;
 	bool hasFraPart = false;
 	bool hasExpPart = false;
 	char ch = reader.peek();
@@ -107,15 +115,15 @@ double TokenReader::NumberReader() {
 				} 
                 else if (ch == '.') {
 					if (intPart.empty()) {
-						throw bad_exception("unexpected char"+ch);
+						throw std::runtime_error("unexpected char .");
 					}
 					reader.next();
 					hasFraPart = true;
-					status = FRA_PART;
+					state = FRA_PART;
 				} 
                 else if (ch == 'e' || ch == 'E'){
                     if (intPart.empty()) {
-						throw bad_exception("unexpected char"+ch);
+						throw std::runtime_error("unexpected char e/E");
 					}
 					reader.next();
 					hasExpPart = true;
@@ -124,13 +132,13 @@ double TokenReader::NumberReader() {
 						expMinus = (signE == '-');
 						reader.next();
 					}
-					status = EXP_PART;
+					state = EXP_PART;
 				} 
                 else{
 					if (intPart.empty()){
-						throw bad_exception("unexpected char"+ch);
+						throw std::runtime_error("unexpected char in int part");
 					}
-					status = NUM_END;
+					state = NUM_END;
 				}
 				continue; 
             case FRA_PART:
@@ -145,12 +153,12 @@ double TokenReader::NumberReader() {
 						expMinus = (signE == '-');
 						reader.next();
 					}
-					status = EXP_PART;
+					state = EXP_PART;
 				}else{
 					if (fraPart.empty()){
-						throw bad_exception("unexpected char"+ch);
+						throw std::runtime_error("unexpected char in frag part");
 					}
-					status = NUM_END;
+					state = NUM_END;
 				}
 				continue;
             case EXP_PART:
@@ -158,24 +166,24 @@ double TokenReader::NumberReader() {
 					expPart.push_back(reader.next());
 				} else {
 					if (expPart.empty()) {
-						throw bad_exception("unexpected char"+ch);
+						throw std::runtime_error("unexpected char in exp part");
 					}
-					status = NUM_END;
+					state = NUM_END;
 				}
 				continue;
             case NUM_END:
 				if (intPart.empty())
-				    throw bad_exception("No int part");
-				int int_part = minusSign ? -stoi(intPart)
+				    throw std::runtime_error("No int part");
+				int int_part = minus ? -stoi(intPart)
 						: stoi(intPart);
 				if (!hasFraPart && !hasExpPart) {
 					return int_part;
 				}
-				if (hasFraPart && fraPart == null) {
-				    throw bad_exception("No frag part");
+				if (hasFraPart && fraPart.empty()) {
+				    throw std::runtime_error("No frag part");
 				}
-				double frag_part = hasFraPart ? (minusSign ? -stod("0."+fraPart):stod("0."+fraPart)):0.0;
-				double number = hasExpPart? ((int_part + frag_part)* pow(10, expMinusSign ? -stoi(expPart):stoi(expPart)))
+				double frag_part = hasFraPart ? (minus ? -stod("0."+fraPart):stod("0."+fraPart)):0.0;
+				double number = hasExpPart? ((int_part + frag_part)* pow(10, expMinus ? -stoi(expPart):stoi(expPart)))
 						:(int_part + frag_part);
 				return number;
         }
@@ -183,9 +191,61 @@ double TokenReader::NumberReader() {
     }
 }
 
-string TokenReader::StringReader() {}
+std::string TokenReader::StringReader() {
+    std::string str;
+    char c = reader.next();
+    if (c != '"') {
+        throw std::runtime_error("Unexpected string value: not \" ");
+    }
 
-void TokenReader::NullReader() {}
+    while (reader.hasMore()) {
+        c = reader.next();
+        if (c == '\\') {
+            char escape = reader.next();
+            switch (escape) {
+                case '"':
+                case '\\':
+                case '/':
+                    str.push_back(escape);
+                    break;
+                case 'b':
+                    str.push_back('\b');
+                    break;
+                case 'f':
+                    str.push_back('\f');
+                    break;
+                case 'n':
+                    str.push_back('\f');
+                    break;
+                case 'r':
+                    str.push_back('\f');
+                    break;
+                case 't':
+                    str.push_back('\f');
+                    break;
+                default:
+                    throw std::runtime_error("Unexpected string value in string");
+            }
+        } else if (c == '"') {
+            break;
+        } else if (c == '\r' || c == '\n')
+            throw std::runtime_error("Unexpected string value \\r&&\\n");
+        else
+            str.push_back(c);
+    }
+    return str;
+}
+
+void TokenReader::NullReader() {
+    char ch_move;
+    std::string predict = "null";
+    for (int i=0; i < predict.length(); i++) {
+        ch_move = reader.next();
+        if (ch_move != predict.at(i)) {
+            throw std::runtime_error("Unexpected null value in null");
+        }
+    }
+}
 
 TokenReader::~TokenReader()
 {
