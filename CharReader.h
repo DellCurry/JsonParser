@@ -15,8 +15,8 @@ public:
 	char next();
 	char peek();
 	string next(int);
-	bool more();
-	bool more(int);
+	bool hasMore();
+	bool hasMore(int);
 	void catchError(int);
 
 private:

@@ -10,47 +10,30 @@ CharReader::~CharReader(){
 
 }
 
-void CharReader::catchError(int pos){
-    if (pos>=size)
-        throw "out of range";
-}
-
-bool CharReader::more(){
+bool CharReader::hasMore(){
     return pos<size;
 }
 
-bool CharReader::more(int n){
+bool CharReader::hasMore(int n){
     return pos+n-1<size;
 }
 
 char CharReader::next(){
-    /*try{
-        catchError(pos);
-    }
-    catch(const char* msg){
-        cout<<msg<<endl;
-    }*/
+    if (pos==size)
+        throw out_of_range("no next char");
     return jsonStr[pos++];
 }
 
 string CharReader::next(int n){
-    /*try{
-        catchError(pos+n-1);
-    }
-    catch(const char* msg){
-        cout<<msg<<endl;
-    }*/
+    if (pos+n-1==size)
+        throw out_of_range("no next char");
     string ans(jsonStr,pos,n);
     pos+=n;
     return ans;
 }
 
 char CharReader::peek(){
-    /*try{
-        catchError(pos);
-    }
-    catch(const char* msg){
-        cout<<msg<<endl;
-    }*/
+    if (pos==size)
+        throw out_of_range("no next char");
     return jsonStr[pos];
 }
