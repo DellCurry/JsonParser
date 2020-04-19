@@ -32,6 +32,7 @@ namespace json{
         static JSONNode* createArrayNode();
         static JSONNode* createObjectNode();
 
+        NodeMap getNodeMap();
         std::string getString();
         Type getType();
         void addToVec(JSONNode* node);

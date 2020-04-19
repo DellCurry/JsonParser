@@ -19,6 +19,8 @@ static bool isSpace(char ch) {
 Token TokenReader::readNext() {
     char c;
     Token token;
+    if (!reader.hasMore())
+        return END_DOCUMENT;
     while (this->reader.hasMore()) {
         c = this->reader.peek();
         if (isSpace(c))

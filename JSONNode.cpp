@@ -10,6 +10,10 @@ namespace json{
     {
     }
 
+    NodeMap JSONNode::getNodeMap(){
+        return this->nodeMap;
+    }
+
     JSONNode* JSONNode::createNumNode(int num) {
         JSONNode* node = new JSONNode(NUMBER);
         node->num = num;
@@ -43,7 +47,7 @@ namespace json{
     }
 
     std::string JSONNode::getString() {
-        return this->name;
+        return this->str;
     }
 
     Type JSONNode::getType() {
@@ -54,7 +58,9 @@ namespace json{
         if (this->type == ARRAY) {
             this->nodeVec.push_back(node);
         }
+        else
         // TODO: throw exception
+            throw std::runtime_error("type not equal to array");
     }
 
     void JSONNode::addToMap(std::string key, JSONNode* node) {
@@ -62,6 +68,8 @@ namespace json{
             this->nodeMap[key] = node;
         }
         // TODO: throw exception
+        else
+            throw std::runtime_error("type not equal to object");
     }
 
 };

@@ -38,7 +38,7 @@ json::JSONNode* JSONParser::parse() {
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
-			if (onStatus(EXPECT_OBJ_VAL)) {
+			if (onStatus(EXPECT_ARR_VAL)) {
 				stack->top()->addToVec(json::JSONNode::createBoolNode(tokenReader->BooleanReader()));
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
@@ -58,7 +58,7 @@ json::JSONNode* JSONParser::parse() {
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
-			if (onStatus(EXPECT_OBJ_VAL)) {
+			if (onStatus(EXPECT_ARR_VAL)) {
 				stack->top()->addToVec(json::JSONNode::createBoolNode(tokenReader->NumberReader()));
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
@@ -67,18 +67,21 @@ json::JSONNode* JSONParser::parse() {
 			throw std::runtime_error("number failed");
 		case NUL:
 			if (onStatus(EXPECT_SINGLE_VAL)) {
+				tokenReader->NullReader();
 				stack->push(json::JSONNode::createNullNode());
 				status = EXPECT_END_JSON;
 				continue;
 			}
 			if (onStatus(EXPECT_OBJ_VAL)) {
+				tokenReader->NullReader();
 				std::string key = stack->top()->getString();
 				stack->pop();
 				stack->top()->addToMap(key, json::JSONNode::createNullNode());
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
-			if (onStatus(EXPECT_OBJ_VAL)) {
+			if (onStatus(EXPECT_ARR_VAL)) {
+				tokenReader->NullReader();
 				stack->top()->addToVec(json::JSONNode::createNullNode());
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
@@ -103,7 +106,7 @@ json::JSONNode* JSONParser::parse() {
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
-			if (onStatus(EXPECT_OBJ_VAL)) {
+			if (onStatus(EXPECT_ARR_VAL)) {
 				stack->top()->addToVec(json::JSONNode::createStrNode(tokenReader->StringReader()));
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
@@ -207,7 +210,7 @@ json::JSONNode* JSONParser::parse() {
 			// TODO: throw exception 
 			throw std::runtime_error("end document failed");
 		default:
-			break;
+			throw std::runtime_error("unexpected char in parser");
 		}
 	}
 	delete stack;
