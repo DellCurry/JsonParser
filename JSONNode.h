@@ -3,39 +3,35 @@
 #include<unordered_map>
 #include<vector>
 
-typedef std::unordered_map<std::string, JSONNode> NodeMap;
-typedef std::vector<JSONNode> NodeVec;
+namespace json{
+    class JSONNode;
+    typedef std::unordered_map<std::string, JSONNode*> NodeMap;
+    typedef std::vector<JSONNode*> NodeVec;
+    typedef enum {
+            NUMBER,
+            STRING,
+            ARRAY,
+            OBJECT,
+            TRUE,
+            FALSE,
+            NUL,
+            UNKNOWN
+        } Type;
 
-class JSONNode
-{
-public:
-	JSONNode();
-	~JSONNode();
-
-private:
-    enum {
-        NUMBER,
-        STRING,
-        ARRAY,
-        OBJECT,
-        TRUE,
-        FALSE,
-        NUL,
-        UNKNOWN
-    } type;
-    std::string name;
-    union {
-        double num;
-        std::string str;
-        NodeMap nodeMap;
-        NodeVec nodeVec;
+    class JSONNode
+    {
+    public:
+        JSONNode();
+        ~JSONNode();
+    private:
+        Type type;
+        std::string name;
+        union {
+            double num;
+            std::string str;
+            NodeMap nodeMap;
+            NodeVec nodeVec;
+        };
     };
+
 };
-
-JSONNode::JSONNode()
-{
-}
-
-JSONNode::~JSONNode()
-{
-}
