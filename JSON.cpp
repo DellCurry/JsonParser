@@ -55,7 +55,7 @@ void printNode(json_node* node){
 
 int main()
 {
-    string s ="{\"a\":{\"aa\":true},\"b\":[1,33],\"c\":null}";
+    string s ="{\"a\":{\"aa\":true},\"b\":[1,33],\"c\":null, \"d\":\"hello from \\u007A\"}";
     json_parser parser(s);
     json_node* node = parser.parse();
     // cout<<node->getType()<<endl;
