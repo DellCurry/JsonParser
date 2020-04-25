@@ -13,6 +13,8 @@ public:
 	std::string next(int);
 	bool more();
 	bool more(int);
+	int get_pos();
+	std::string get_readed();
 	void catch_error(int);
 
 private:

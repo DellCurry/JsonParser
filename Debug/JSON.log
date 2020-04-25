@@ -1,2 +1,14 @@
-﻿  json_node.cpp
+﻿  JSON.cpp
+  char_reader.cpp
+  json_parser.cpp
+C:\Users\zhaohan\Desktop\Design in C++\JSON\json_parser.cpp(49,74): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\zhaohan\Desktop\Design in C++\JSON\json_parser.cpp(56,92): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\zhaohan\Desktop\Design in C++\JSON\json_parser.cpp(61,87): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  token_reader.cpp
+C:\Users\zhaohan\Desktop\Design in C++\JSON\token_reader.cpp(237,46): warning C4244: 'argument': conversion from 'char16_t' to 'const _Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+  Generating Code...
   JSON.vcxproj -> C:\Users\zhaohan\Desktop\Design in C++\JSON\Debug\JSON.exe

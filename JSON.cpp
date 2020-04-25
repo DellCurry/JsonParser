@@ -55,9 +55,16 @@ void printNode(json_node* node){
 
 int main()
 {
-    string s ="{\"a\":{\"aa\":true},\"b\":[1,33],\"c\":null, \"d\":\"hello from \\u007A\"}";
+    string s ="{\"a\":{\"aa\":true},\"b\":[1,33],\"c\":null, \"d\"\"hello from \\u007A\"}";
     json_parser parser(s);
-    json_node* node = parser.parse();
+    json_node* node = nullptr;
+    try {
+        node = parser.parse();
+    } catch (const std::exception& ex) {
+        cerr << ex.what() << endl;
+        exit(-1);
+    }
+    
     // cout<<node->getType()<<endl;
     // cout<<"size="<<m.size()<<endl;
     printNode(node);

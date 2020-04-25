@@ -28,6 +28,14 @@ bool char_reader::more(int n){
     return pos+n-1<size;
 }
 
+int char_reader::get_pos() {
+    return pos;
+}
+
+std::string char_reader::get_readed() {
+    return json_str.substr(0, pos);
+}
+
 char char_reader::next(){
     if (pos==size)
         throw std::out_of_range("no next char");
