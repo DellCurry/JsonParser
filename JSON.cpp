@@ -6,18 +6,60 @@
 #include "json_node.h"
 using namespace std;
 using namespace json;
+
+void printNode(json_node* node){
+    node_map m;
+    node_vec vec;
+    node_type t = node->get_node_type();
+    switch (t){
+        case OBJECT:
+            cout<<'{';
+            m = node->get_node_map();
+            for (auto &i:m){
+                cout<<'\''<<i.first<<'\''<<':';
+                printNode(i.second);
+                cout<<',';
+            }
+            cout<<'}';
+            break;
+        case ARRAY:
+            vec = node->get_node_vec();
+            cout<<'[';
+            for (auto &i:vec){
+                printNode(i);
+                cout<<',';
+            }
+            cout<<']';
+            break;
+        case node_type::NUMBER:
+            cout<<node->get_node_num();
+            break;
+        case node_type::STRING:
+            cout<<node->get_string();
+            break;
+        case TRUE:
+            cout<<"true";
+            break;
+        case FALSE:
+            cout<<"false";
+            break;
+        case node_type::NUL:
+            cout<<"null";
+            break;
+        default:
+            cout<<"unknown";
+            break;
+    }
+}
+
 int main()
 {
     string s ="{\"a\":{\"aa\":true},\"b\":[1,33],\"c\":null}";
     json_parser parser(s);
     json_node* node = parser.parse();
-    node_map m = node->get_node_map();
     // cout<<node->getType()<<endl;
     // cout<<"size="<<m.size()<<endl;
-    for (auto i:m){
-        cout<<i.first<<endl;
-    }
-
+    printNode(node);
 }
 
 /*

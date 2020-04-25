@@ -33,6 +33,8 @@ namespace json{
         static json_node* create_object_node();
 
         node_map get_node_map();
+        node_vec get_node_vec();
+        double get_node_num();
         std::string get_string();
         node_type get_node_type();
         void add_to_vec(json_node* node);

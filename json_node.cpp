@@ -15,6 +15,14 @@ namespace json{
         return this->map;
     }
 
+    node_vec json_node::get_node_vec(){
+        return this->vec;
+    }
+
+    double json_node::get_node_num(){
+        return this->num;
+    }
+
     json_node* json_node::create_num_node(int num) {
         json_node* node = new json_node(NUMBER);
         node->num = num;
