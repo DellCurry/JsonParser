@@ -47,19 +47,19 @@ json::json_node* json_parser::parse() {
 			throw std::runtime_error("boolean failed");
 		case NUMBER:
 			if (on_status(EXPECT_SINGLE_VAL)) {
-				stack->push(json::json_node::create_bool_node(tk_reader->number_reader()));
+				stack->push(json::json_node::create_num_node(tk_reader->number_reader()));
 				status = EXPECT_END_JSON;
 				continue;
 			}
 			if (on_status(EXPECT_OBJ_VAL)) {
 				std::string key = stack->top()->get_string();
 				stack->pop();
-				stack->top()->add_to_map(key, json::json_node::create_bool_node(tk_reader->number_reader()));
+				stack->top()->add_to_map(key, json::json_node::create_num_node(tk_reader->number_reader()));
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
 			if (on_status(EXPECT_ARR_VAL)) {
-				stack->top()->add_to_vec(json::json_node::create_bool_node(tk_reader->number_reader()));
+				stack->top()->add_to_vec(json::json_node::create_num_node(tk_reader->number_reader()));
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
 			}

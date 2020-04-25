@@ -50,4 +50,6 @@ namespace json{
         };
     };
 
+    void releaseNode(json_node*);
+
 };

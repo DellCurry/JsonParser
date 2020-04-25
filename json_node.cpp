@@ -81,4 +81,27 @@ namespace json{
             throw std::runtime_error("type not equal to object");
     }
 
+
+    void releaseNode(json_node* node){
+        int seq = 0;
+        node_map m;
+        node_vec vec;
+        node_type t = node->get_node_type();
+        switch (t){
+            case OBJECT:
+                m = node->get_node_map();
+                for (auto &i:m)
+                    releaseNode(i.second);
+                delete node;
+                break;
+            case ARRAY:
+                vec = node->get_node_vec();
+                for (auto &i:vec)
+                    releaseNode(i);
+                delete node;
+                break;
+            default:
+                delete node;
+        }
+    }
 };

@@ -8,6 +8,7 @@ using namespace std;
 using namespace json;
 
 void printNode(json_node* node){
+    int seq = 0;
     node_map m;
     node_vec vec;
     node_type t = node->get_node_type();
@@ -16,9 +17,9 @@ void printNode(json_node* node){
             cout<<'{';
             m = node->get_node_map();
             for (auto &i:m){
+                if (seq++>0) cout<<',';
                 cout<<'\''<<i.first<<'\''<<':';
                 printNode(i.second);
-                cout<<',';
             }
             cout<<'}';
             break;
@@ -26,8 +27,8 @@ void printNode(json_node* node){
             vec = node->get_node_vec();
             cout<<'[';
             for (auto &i:vec){
+                if (seq++>0) cout<<',';
                 printNode(i);
-                cout<<',';
             }
             cout<<']';
             break;
@@ -60,6 +61,8 @@ int main()
     // cout<<node->getType()<<endl;
     // cout<<"size="<<m.size()<<endl;
     printNode(node);
+    cout<<endl;
+    releaseNode(node);
 }
 
 /*
