@@ -60,6 +60,8 @@ token_type token_reader::read_next() {
         case 'n':
             token = NUL;
             break;
+        default:
+            break;
     }
     if ( c == '-' || (c >= '0' && c <= '9') )
         token = NUMBER;
@@ -78,9 +80,9 @@ bool token_reader::bool_reader() {
     else{
         throw std::runtime_error("Unexpected boolean value");
     }
-    for (int i=0; i < predict.length(); i++) {
+    for (char i : predict) {
         ch_move = this->reader.next();
-        if (ch_move != predict.at(i)) {
+        if (ch_move != i) {
             throw std::runtime_error("Unexpected boolean value");
         }
     }
@@ -100,7 +102,7 @@ double token_reader::number_reader() {
 		reader.next();
 	}
     int state = INT_PART;
-    while(1){
+    while(true){
         if (reader.more()){
             ch = reader.peek();
         }
@@ -192,6 +194,7 @@ double token_reader::number_reader() {
 
 std::string token_reader::string_reader() {
     std::string str;
+    int u = 0; // for unicode
     char c = reader.next();
     if (c != '"') {
         throw std::runtime_error("Unexpected string value: not \" ");
@@ -211,16 +214,27 @@ std::string token_reader::string_reader() {
                     str.push_back('\b');
                     break;
                 case 'f':
-                    str.push_back('\f');
-                    break;
                 case 'n':
-                    str.push_back('\f');
-                    break;
                 case 'r':
-                    str.push_back('\f');
-                    break;
                 case 't':
                     str.push_back('\f');
+                    break;
+                case 'u':
+                    // unicode
+                    for (int i = 0; i < 4; i++) {
+                        char uch = reader.next();
+                        if (uch >= '0' && uch <= '9') {
+                            u = (u << 4) + (uch - '0');
+                        } else if (uch >= 'a' && uch <= 'f') {
+                            u = (u << 4) + (uch - 'a') + 10;
+                        } else if (uch >= 'A' && uch <= 'F') {
+                            u = (u << 4) + (uch - 'A') + 10;
+                        } else {
+                            throw std::runtime_error("Unexpected char of unicode");
+                        }
+                    }
+
+                    str.push_back((char16_t) u);
                     break;
                 default:
                     throw std::runtime_error("Unexpected string value in string");
@@ -238,14 +252,13 @@ std::string token_reader::string_reader() {
 void token_reader::null_reader() {
     char ch_move;
     std::string predict = "null";
-    for (int i=0; i < predict.length(); i++) {
+    for (char i : predict) {
         ch_move = reader.next();
-        if (ch_move != predict.at(i)) {
+        if (ch_move != i) {
             throw std::runtime_error("Unexpected null value in null");
         }
     }
 }
 
 token_reader::~token_reader()
-{
-}
+= default;
