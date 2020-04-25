@@ -12,26 +12,26 @@ namespace json{
     }
 
     node_map json_node::get_node_map(){
-        return this->map;
+        return this->u.map;
     }
 
     node_vec json_node::get_node_vec(){
-        return this->vec;
+        return this->u.vec;
     }
 
     double json_node::get_node_num(){
-        return this->num;
+        return this->u.num;
     }
 
     json_node* json_node::create_num_node(int num) {
         json_node* node = new json_node(NUMBER);
-        node->num = num;
+        node->u.num = num;
         return node;
     }
 
     json_node* json_node::create_str_node(std::string str) {
         json_node* node = new json_node(STRING);
-        node->str = str;
+        new (&node->u.str) std::string(str);
         return node;
     }
 
@@ -45,18 +45,21 @@ namespace json{
 
     json_node* json_node::create_array_node() {
         json_node* node = new json_node(ARRAY);
-        node->vec = node_vec();
+        new (&node->u.vec) node_vec;
+        //node->u.vec = node_vec();
         return node;
     }
 
     json_node* json_node::create_object_node() {
         json_node* node = new json_node(OBJECT);
-        node->map = node_map();
+        new (&node->u.map) node_map;
+        //node->map["ssss"] = nullptr;
+        //node->u.map = node_map();
         return node;
     }
 
     std::string json_node::get_string() {
-        return this->str;
+        return this->u.str;
     }
 
     node_type json_node::get_node_type() {
@@ -65,7 +68,7 @@ namespace json{
 
     void json_node::add_to_vec(json_node* node) {
         if (this->type == ARRAY) {
-            this->vec.push_back(node);
+            this->u.vec.push_back(node);
         }
         else
         // TODO: throw exception
@@ -74,7 +77,7 @@ namespace json{
 
     void json_node::add_to_map(std::string key, json_node* node) {
         if (this->type == OBJECT) {
-            this->map[key] = node;
+            this->u.map[key] = node;
         }
         // TODO: throw exception
         else

@@ -42,12 +42,14 @@ namespace json{
     private:
         node_type type;
         std::string name;
-        union {
+        union U {
             double num;
             std::string str;
             node_map map;
             node_vec vec;
-        };
+            U() {};
+            ~U() {};
+        } u;
     };
 
     void releaseNode(json_node*);
