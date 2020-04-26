@@ -1,3 +1,5 @@
 *.sln
 *.vcx*
 .vs
+Debug
+Release

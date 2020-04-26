@@ -1,18 +1,1 @@
-﻿  JSON.cpp
-  char_reader.cpp
-  json_parser.cpp
-C:\Users\zhaohan\Desktop\Design in C++\JSON\json_parser.cpp(50,74): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\zhaohan\Desktop\Design in C++\JSON\json_parser.cpp(57,92): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\zhaohan\Desktop\Design in C++\JSON\json_parser.cpp(62,87): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-  token_reader.cpp
-C:\Users\zhaohan\Desktop\Design in C++\JSON\token_reader.cpp(237,46): warning C4244: 'argument': conversion from 'char16_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-  Generating code
-  19 of 544 functions ( 3.5%) were compiled, the rest were copied from previous compilation.
-    7 functions were new in current compilation
-    37 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  JSON.vcxproj -> C:\Users\zhaohan\Desktop\Design in C++\JSON\Release\JSON.exe
+﻿
