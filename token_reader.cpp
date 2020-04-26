@@ -78,12 +78,14 @@ bool token_reader::bool_reader() {
     else if (ch == 'f')
         predict = "alse";
     else{
-        throw std::runtime_error("Unexpected boolean value");
+        throw std::runtime_error("Unexpected boolean character: "
+                                 + std::string(1, ch));
     }
     for (char i : predict) {
         ch_move = this->reader.next();
         if (ch_move != i) {
-            throw std::runtime_error("Unexpected boolean value");
+            throw std::runtime_error("Unexpected boolean character: "
+                                     + std::string(1, ch_move));
         }
     }
     return ch == 't';
@@ -116,7 +118,7 @@ double token_reader::number_reader() {
 				} 
                 else if (ch == '.') {
 					if (intPart.empty()) {
-						throw std::runtime_error("unexpected char .");
+						throw std::runtime_error("Unexpected numeric char: .");
 					}
 					reader.next();
 					hasFraPart = true;
@@ -124,7 +126,8 @@ double token_reader::number_reader() {
 				} 
                 else if (ch == 'e' || ch == 'E'){
                     if (intPart.empty()) {
-						throw std::runtime_error("unexpected char e/E");
+                        throw std::runtime_error("Unexpected numeric character: "
+                                                 + std::string(1, ch));
 					}
 					reader.next();
 					hasExpPart = true;
@@ -137,7 +140,8 @@ double token_reader::number_reader() {
 				} 
                 else{
 					if (intPart.empty()){
-						throw std::runtime_error("unexpected char in int part");
+                        throw std::runtime_error("Unexpected char in int part: "
+                                                 + std::string(1, ch));
 					}
 					state = NUM_END;
 				}
@@ -157,7 +161,8 @@ double token_reader::number_reader() {
 					state = EXP_PART;
 				}else{
 					if (fraPart.empty()){
-						throw std::runtime_error("unexpected char in frag part");
+                        throw std::runtime_error("Unexpected char in frag part: "
+                                                 + std::string(1, ch));
 					}
 					state = NUM_END;
 				}
@@ -167,7 +172,8 @@ double token_reader::number_reader() {
 					expPart.push_back(reader.next());
 				} else {
 					if (expPart.empty()) {
-						throw std::runtime_error("unexpected char in exp part");
+                        throw std::runtime_error("Unexpected char in exp part: "
+                                                 + std::string(1, ch));
 					}
 					state = NUM_END;
 				}
@@ -197,7 +203,7 @@ std::string token_reader::string_reader() {
     int u = 0; // for unicode
     char c = reader.next();
     if (c != '"') {
-        throw std::runtime_error("Unexpected string value: not \" ");
+        throw std::runtime_error("Unexpected string character: not \" ");
     }
 
     while (reader.more()) {
@@ -230,19 +236,20 @@ std::string token_reader::string_reader() {
                         } else if (uch >= 'A' && uch <= 'F') {
                             u = (u << 4) + (uch - 'A') + 10;
                         } else {
-                            throw std::runtime_error("Unexpected char of unicode");
+                            throw std::runtime_error("Unexpected unicode character: "
+                                                     + std::string(1, uch));
                         }
                     }
 
                     str.push_back((char16_t) u);
                     break;
                 default:
-                    throw std::runtime_error("Unexpected string value in string");
+                    throw std::runtime_error("Unexpected string value in string: " + std::string(1, escape));
             }
         } else if (c == '"') {
             break;
         } else if (c == '\r' || c == '\n')
-            throw std::runtime_error("Unexpected string value \\r&&\\n");
+            throw std::runtime_error("Unexpected string character: \\r&&\\n");
         else
             str.push_back(c);
     }
@@ -255,7 +262,7 @@ void token_reader::null_reader() {
     for (char i : predict) {
         ch_move = reader.next();
         if (ch_move != i) {
-            throw std::runtime_error("Unexpected null value in null");
+            throw std::runtime_error("Unexpected null character in null: " + std::string(1, ch_move));
         }
     }
 }
