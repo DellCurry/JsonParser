@@ -37,11 +37,13 @@ namespace json{
         double get_node_num();
         std::string get_string();
         node_type get_node_type();
+        void add_to_seq_vec(std::string key);
         void add_to_vec(json_node* node);
         void add_to_map(std::string key, json_node* node);
     private:
         node_type type;
         std::string name;
+        std::vector<std::string> seq_vec;
         union U {
             double num;
             std::string str;

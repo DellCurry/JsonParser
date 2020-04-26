@@ -66,6 +66,10 @@ namespace json{
         return this->type;
     }
 
+	void json_node::add_to_seq_vec(std::string key) {
+        this->seq_vec.push_back(key);
+	}
+
     void json_node::add_to_vec(json_node* node) {
         if (this->type == ARRAY) {
             this->u.vec.push_back(node);

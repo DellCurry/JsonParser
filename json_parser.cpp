@@ -35,6 +35,7 @@ json::json_node* json_parser::parse() {
 				std::string key = stack->top()->get_string();
 				stack->pop();
 				stack->top()->add_to_map(key, json::json_node::create_bool_node(tk_reader->bool_reader()));
+				stack->top()->add_to_seq_vec(key);
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
@@ -55,6 +56,7 @@ json::json_node* json_parser::parse() {
 				std::string key = stack->top()->get_string();
 				stack->pop();
 				stack->top()->add_to_map(key, json::json_node::create_num_node(tk_reader->number_reader()));
+				stack->top()->add_to_seq_vec(key);
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
@@ -77,6 +79,7 @@ json::json_node* json_parser::parse() {
 				std::string key = stack->top()->get_string();
 				stack->pop();
 				stack->top()->add_to_map(key, json::json_node::create_null_node());
+				stack->top()->add_to_seq_vec(key);
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
@@ -103,6 +106,7 @@ json::json_node* json_parser::parse() {
 				std::string key = stack->top()->get_string();
 				stack->pop();
 				stack->top()->add_to_map(key, json::json_node::create_str_node(tk_reader->string_reader()));
+				stack->top()->add_to_seq_vec(key);
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
 			}
@@ -163,6 +167,7 @@ json::json_node* json_parser::parse() {
 					std::string key = stack->top()->get_string();
 					stack->pop();
 					stack->top()->add_to_map(key, tempArray);
+					stack->top()->add_to_seq_vec(key);
 					status = EXPECT_COMMA | EXPECT_END_OBJ;
 					continue;
 				}
@@ -189,6 +194,7 @@ json::json_node* json_parser::parse() {
 					std::string key = stack->top()->get_string();
 					stack->pop();
 					stack->top()->add_to_map(key, tempObject);
+					stack->top()->add_to_seq_vec(key);
 					status = EXPECT_COMMA | EXPECT_END_OBJ;
 					continue;
 				}
