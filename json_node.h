@@ -37,6 +37,7 @@ namespace json{
         double get_node_num();
         std::string get_string();
         node_type get_node_type();
+        std::vector<std::string> get_seq_vec();
         void add_to_seq_vec(std::string key);
         void add_to_vec(json_node* node);
         void add_to_map(std::string key, json_node* node);

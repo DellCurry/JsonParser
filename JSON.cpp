@@ -7,55 +7,62 @@
 using namespace std;
 using namespace json;
 
-void printNode(json_node* node){
+void printNode(json_node* node,string& ans){
     int seq = 0;
     node_map m;
     node_vec vec;
+    vector<string> seq_vec;
     node_type t = node->get_node_type();
+    unordered_map<string,json_node*>::iterator iter;
     switch (t){
         case OBJECT:
-            cout<<'{';
+            ans.push_back('{');
             m = node->get_node_map();
-            for (auto &i:m){
-                if (seq++>0) cout<<',';
-                cout<<'\''<<i.first<<'\''<<':';
-                printNode(i.second);
+            seq_vec = node->get_seq_vec();
+            for (auto &i:seq_vec){
+                if (seq++>0) ans.push_back(',');
+                iter = m.find(i);
+                if (iter==m.end()) throw std::runtime_error("no such key in hashmap");
+                ans.insert(ans.size(),string('\"'+iter->first+'\"'+':'));
+                printNode(iter->second,ans);
             }
-            cout<<'}';
+            ans.push_back('}');
             break;
         case ARRAY:
             vec = node->get_node_vec();
-            cout<<'[';
+            ans.push_back('[');
             for (auto &i:vec){
-                if (seq++>0) cout<<',';
-                printNode(i);
+                if (seq++>0) ans.push_back(',');
+                printNode(i,ans);
             }
-            cout<<']';
+            ans.push_back(']');
             break;
         case node_type::NUMBER:
-            cout<<node->get_node_num();
+            ans.insert(ans.size(),to_string((int)node->get_node_num()));
             break;
         case node_type::STRING:
-            cout<<node->get_string();
+            ans.push_back('\"');
+            ans.insert(ans.size(),node->get_string());
+            ans.push_back('\"');
             break;
         case TRUE:
-            cout<<"true";
+            ans.insert(ans.size(),string("true"));
             break;
         case FALSE:
-            cout<<"false";
+            ans.insert(ans.size(),string("false"));
             break;
         case node_type::NUL:
-            cout<<"null";
+            ans.insert(ans.size(),string("null"));
             break;
         default:
-            cout<<"unknown";
+            ans.insert(ans.size(),string("unknown"));
             break;
     }
 }
 
 int main()
 {
-    string s ="{\"a\":{\"aa\":true},\"b\":[1,33],\"c\":null, \"d\":\"hello from \\u007A\"}";
+    string s ="{\"a\":{\"aa\":true},\"s\":[1,33],\"c\":null,\"d\":\"hello from\"}";
     json_parser parser(s);
     json_node* node = nullptr;
     try {
@@ -65,10 +72,12 @@ int main()
         exit(-1);
     }
     
-    // cout<<node->getType()<<endl;
-    // cout<<"size="<<m.size()<<endl;
-    printNode(node);
+    string ans;
+    printNode(node,ans);
+    cout<<ans;
     cout<<endl;
+    cout<<s<<endl;
+    cout<<"equal = "<<(ans==s)<<endl;
     releaseNode(node);
 }
 

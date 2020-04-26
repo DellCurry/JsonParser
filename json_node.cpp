@@ -23,6 +23,10 @@ namespace json{
         return this->u.num;
     }
 
+    std::vector<std::string> json_node::get_seq_vec(){
+        return this->seq_vec;
+    }
+
     json_node* json_node::create_num_node(int num) {
         json_node* node = new json_node(NUMBER);
         node->u.num = num;
