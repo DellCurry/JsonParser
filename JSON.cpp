@@ -6,61 +6,10 @@
 #include <sstream>
 #include "json_parser.h"
 #include "json_node.h"
+#include <chrono>
 using namespace std;
 using namespace json;
-
-void printNode(json_node* node,string& ans){
-    int seq = 0;
-    node_map m;
-    node_vec vec;
-    vector<string> seq_vec;
-    node_type t = node->get_node_type();
-    unordered_map<string,json_node*>::iterator iter;
-    switch (t){
-        case OBJECT:
-            ans.push_back('{');
-            m = node->get_node_map();
-            seq_vec = node->get_seq_vec();
-            for (auto &i:seq_vec){
-                if (seq++>0) ans.push_back(',');
-                iter = m.find(i);
-                if (iter==m.end()) throw std::runtime_error("no such key in hashmap");
-                ans.insert(ans.size(),string('\"'+iter->first+'\"'+':'));
-                printNode(iter->second,ans);
-            }
-            ans.push_back('}');
-            break;
-        case ARRAY:
-            vec = node->get_node_vec();
-            ans.push_back('[');
-            for (auto &i:vec){
-                if (seq++>0) ans.push_back(',');
-                printNode(i,ans);
-            }
-            ans.push_back(']');
-            break;
-        case node_type::NUMBER:
-            ans.insert(ans.size(),node->get_node_num());
-            break;
-        case node_type::STRING:
-            ans.push_back('\"');
-            ans.insert(ans.size(),node->get_string());
-            ans.push_back('\"');
-            break;
-        case TRUE:
-            ans.insert(ans.size(),string("true"));
-            break;
-        case FALSE:
-            ans.insert(ans.size(),string("false"));
-            break;
-        case node_type::NUL:
-            ans.insert(ans.size(),string("null"));
-            break;
-        default:
-            ans.insert(ans.size(),string("unknown"));
-            break;
-    }
-}
+static const uint32_t ntimes = 10;
 
 int main(int argc, char **arg)
 {   
@@ -81,19 +30,36 @@ int main(int argc, char **arg)
     }
     else
         s ="{\"a\":{\"aa\":true},\"s\":[1,33],\"c\":null,\"d\":\"hello from\"}";
-    json_parser parser(s);
+    
     json_node* node = nullptr;
+    chrono::steady_clock::time_point start_time;
+    chrono::steady_clock::time_point end_time;
+    chrono::microseconds us;
     // try {
+
+    start_time = chrono::steady_clock::now();
+    for (uint32_t i = 0; i < ntimes; ++i) {
+        json_parser parser(s);
         node = parser.parse();
+        releaseNode(node);
+        node = nullptr;
+    }
+    end_time = chrono::steady_clock::now();
+    us=(chrono::duration_cast<chrono::microseconds>(
+                               end_time - start_time));
+    cout << "[+] Finished successfully with an average of: " << (us.count() / ntimes) << " us\n";
+        
     // } catch (const std::exception& ex) {
     //     cerr << ex.what() << endl;
     //     exit(-1);
     // }
     
-    string ans;
-    printNode(node,ans);
-    cout<<"equal = "<<(ans==s)<<endl;
-    releaseNode(node);
+    // string ans;
+    // json_parser parser(s);
+    // node = parser.parse();
+    // printNode(node,ans);
+    // cout<<"equal = "<<(ans==s)<<endl;
+    // releaseNode(node);
 }
 
 /*

@@ -11,9 +11,9 @@ char_reader::char_reader(std::string& s){
 }
 
 char_reader::char_reader(char_reader& reader){
-    std::string json_str = reader.json_str;
-	int pos = reader.pos;
-	int size = reader.size;
+    json_str = reader.json_str;
+	pos = reader.pos;
+	size = reader.size;
 }
 
 char_reader::~char_reader(){

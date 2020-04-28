@@ -44,6 +44,7 @@ json::json_node* json_parser::parse() {
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected bool at position: " 
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case NUMBER:
@@ -65,6 +66,7 @@ json::json_node* json_parser::parse() {
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected number at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case NUL:
@@ -89,6 +91,7 @@ json::json_node* json_parser::parse() {
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected null at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case STRING:
@@ -115,6 +118,7 @@ json::json_node* json_parser::parse() {
 				status = EXPECT_COMMA | EXPECT_END_ARR;
 				continue;
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected string at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case COLON:
@@ -122,6 +126,7 @@ json::json_node* json_parser::parse() {
 				status = EXPECT_OBJ_VAL | EXPECT_BEGIN_OBJ | EXPECT_BEGIN_ARR;
 				continue;
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected ':' at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case COMMA:
@@ -135,6 +140,7 @@ json::json_node* json_parser::parse() {
 					continue;
 				}
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected ',' at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case BEGIN_ARR:
@@ -143,6 +149,7 @@ json::json_node* json_parser::parse() {
 				status = EXPECT_ARR_VAL | EXPECT_BEGIN_OBJ | EXPECT_BEGIN_ARR | EXPECT_END_ARR;
 				continue;
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected '[' at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case BEGIN_OBJ:
@@ -151,6 +158,7 @@ json::json_node* json_parser::parse() {
 				status = EXPECT_OBJ_KEY | EXPECT_BEGIN_OBJ | EXPECT_END_OBJ;
 				continue;
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected '{' at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case END_ARR:
@@ -178,6 +186,7 @@ json::json_node* json_parser::parse() {
 					continue;
 				}
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected '[' at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case END_OBJ:
@@ -205,6 +214,7 @@ json::json_node* json_parser::parse() {
 					continue;
 				}
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected '}' at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		case END_JSON:
@@ -213,9 +223,11 @@ json::json_node* json_parser::parse() {
 					return stack->top();
 				}
 			}
+			delete stack;
 			throw std::runtime_error("Unexpected end JSON at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		default:
+			delete stack;
 			throw std::runtime_error("Unexpected character at position: "
 				+ std::to_string(tk_reader->reader.get_pos()) + "\nAccepted JSON string: " + tk_reader->reader.get_readed());
 		}

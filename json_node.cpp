@@ -92,6 +92,58 @@ namespace json{
             throw std::runtime_error("type not equal to object");
     }
 
+    void printNode(json_node* node,std::string& ans){
+        int seq = 0;
+        node_map m;
+        node_vec vec;
+        std::vector<std::string> seq_vec;
+        node_type t = node->get_node_type();
+        std::unordered_map<std::string,json_node*>::iterator iter;
+        switch (t){
+            case OBJECT:
+                ans.push_back('{');
+                m = node->get_node_map();
+                seq_vec = node->get_seq_vec();
+                for (auto &i:seq_vec){
+                    if (seq++>0) ans.push_back(',');
+                    iter = m.find(i);
+                    if (iter==m.end()) throw std::runtime_error("no such key in hashmap");
+                    ans.insert(ans.size(),std::string('\"'+iter->first+'\"'+':'));
+                    printNode(iter->second,ans);
+                }
+                ans.push_back('}');
+                break;
+            case ARRAY:
+                vec = node->get_node_vec();
+                ans.push_back('[');
+                for (auto &i:vec){
+                    if (seq++>0) ans.push_back(',');
+                    printNode(i,ans);
+                }
+                ans.push_back(']');
+                break;
+            case node_type::NUMBER:
+                ans.insert(ans.size(),node->get_node_num());
+                break;
+            case node_type::STRING:
+                ans.push_back('\"');
+                ans.insert(ans.size(),node->get_string());
+                ans.push_back('\"');
+                break;
+            case TRUE:
+                ans.insert(ans.size(),std::string("true"));
+                break;
+            case FALSE:
+                ans.insert(ans.size(),std::string("false"));
+                break;
+            case node_type::NUL:
+                ans.insert(ans.size(),std::string("null"));
+                break;
+            default:
+                ans.insert(ans.size(),std::string("unknown"));
+                break;
+        }
+}
 
     void releaseNode(json_node* node){
         int seq = 0;

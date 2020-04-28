@@ -55,6 +55,7 @@ namespace json{
         } u;
     };
 
+    void printNode(json_node*,std::string&);
     void releaseNode(json_node*);
 
 };
