@@ -91,7 +91,7 @@ bool token_reader::bool_reader() {
     return ch == 't';
 }
 
-double token_reader::number_reader() {
+std::string token_reader::number_reader() {
     std::string intPart; 
 	std::string fraPart; 
 	std::string expPart;
@@ -181,17 +181,17 @@ double token_reader::number_reader() {
             case NUM_END:
 				if (intPart.empty())
 				    throw std::runtime_error("No int part");
-				int int_part = minus ? -stoi(intPart)
-						: stoi(intPart);
+				std::string int_part = minus ? ('-'+intPart)
+						: intPart;
 				if (!hasFraPart && !hasExpPart) {
 					return int_part;
 				}
 				if (hasFraPart && fraPart.empty()) {
 				    throw std::runtime_error("No frag part");
 				}
-				double frag_part = hasFraPart ? (minus ? -stod("0."+fraPart):stod("0."+fraPart)):0.0;
-				double number = hasExpPart? ((int_part + frag_part)* pow(10, expMinus ? -stoi(expPart):stoi(expPart)))
-						:(int_part + frag_part);
+				std::string num_part = int_part + (hasFraPart ? ('.'+fraPart):std::string());
+				std::string number = hasExpPart? (num_part + 'e' + (expMinus?('-'+expPart):expPart))
+						                        :num_part;
 				return number;
         }
 

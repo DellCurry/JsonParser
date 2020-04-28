@@ -2,6 +2,8 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "json_parser.h"
 #include "json_node.h"
 using namespace std;
@@ -38,7 +40,7 @@ void printNode(json_node* node,string& ans){
             ans.push_back(']');
             break;
         case node_type::NUMBER:
-            ans.insert(ans.size(),to_string((int)node->get_node_num()));
+            ans.insert(ans.size(),node->get_node_num());
             break;
         case node_type::STRING:
             ans.push_back('\"');
@@ -60,23 +62,36 @@ void printNode(json_node* node,string& ans){
     }
 }
 
-int main()
-{
-    string s ="{\"a\":{\"aa\":true},\"s\":[1,33],\"c\":null,\"d\":\"hello from\"}";
+int main(int argc, char **arg)
+{   
+    string s;
+    
+    if (argc==2){
+        fstream f(arg[1],ios::in);
+        ostringstream buf;
+        char ch;
+        while(buf&&f.get(ch)){
+            //pass space to make comparison easy
+            if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+                continue;
+            buf.put(ch);
+        }
+        s = buf.str();
+        f.close();
+    }
+    else
+        s ="{\"a\":{\"aa\":true},\"s\":[1,33],\"c\":null,\"d\":\"hello from\"}";
     json_parser parser(s);
     json_node* node = nullptr;
-    try {
+    // try {
         node = parser.parse();
-    } catch (const std::exception& ex) {
-        cerr << ex.what() << endl;
-        exit(-1);
-    }
+    // } catch (const std::exception& ex) {
+    //     cerr << ex.what() << endl;
+    //     exit(-1);
+    // }
     
     string ans;
     printNode(node,ans);
-    cout<<ans;
-    cout<<endl;
-    cout<<s<<endl;
     cout<<"equal = "<<(ans==s)<<endl;
     releaseNode(node);
 }

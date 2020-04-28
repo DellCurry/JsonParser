@@ -11,7 +11,7 @@ public:
 	~token_reader();
     token_type read_next();
     bool bool_reader();
-    double number_reader();
+    std::string number_reader();
     std::string string_reader();
     void null_reader();
 };

@@ -19,7 +19,7 @@ namespace json{
         return this->u.vec;
     }
 
-    double json_node::get_node_num(){
+    std::string json_node::get_node_num(){
         return this->u.num;
     }
 
@@ -27,9 +27,9 @@ namespace json{
         return this->seq_vec;
     }
 
-    json_node* json_node::create_num_node(int num) {
+    json_node* json_node::create_num_node(std::string num) {
         json_node* node = new json_node(NUMBER);
-        node->u.num = num;
+        new (&node->u.num) std::string(num);
         return node;
     }
 
@@ -70,7 +70,7 @@ namespace json{
         return this->type;
     }
 
-	void json_node::add_to_seq_vec(std::string key) {
+	void json_node::add_to_seq_vec(std::string& key) {
         this->seq_vec.push_back(key);
 	}
 
@@ -83,7 +83,7 @@ namespace json{
             throw std::runtime_error("type not equal to array");
     }
 
-    void json_node::add_to_map(std::string key, json_node* node) {
+    void json_node::add_to_map(std::string& key, json_node* node) {
         if (this->type == OBJECT) {
             this->u.map[key] = node;
         }
