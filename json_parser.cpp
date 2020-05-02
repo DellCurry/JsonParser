@@ -220,7 +220,9 @@ json::json_node* json_parser::parse() {
 		case END_JSON:
 			if (on_status(EXPECT_END_JSON)) {
 				if (stack->size() == 1) {
-					return stack->top();
+					json::json_node* ans = stack->top();
+					delete stack;
+					return ans;
 				}
 			}
 			delete stack;

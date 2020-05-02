@@ -11,19 +11,19 @@ namespace json{
     {
     }
 
-    node_map json_node::get_node_map(){
+    node_map& json_node::get_node_map(){
         return this->u.map;
     }
 
-    node_vec json_node::get_node_vec(){
+    node_vec& json_node::get_node_vec(){
         return this->u.vec;
     }
 
-    std::string json_node::get_node_num(){
+    std::string& json_node::get_node_num(){
         return this->u.num;
     }
 
-    std::vector<std::string> json_node::get_seq_vec(){
+    std::vector<std::string>& json_node::get_seq_vec(){
         return this->seq_vec;
     }
 
@@ -62,11 +62,11 @@ namespace json{
         return node;
     }
 
-    std::string json_node::get_string() {
+    std::string& json_node::get_string() {
         return this->u.str;
     }
 
-    node_type json_node::get_node_type() {
+    node_type& json_node::get_node_type() {
         return this->type;
     }
 
@@ -146,7 +146,6 @@ namespace json{
 }
 
     void releaseNode(json_node* node){
-        int seq = 0;
         node_map m;
         node_vec vec;
         node_type t = node->get_node_type();
