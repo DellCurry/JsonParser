@@ -9,7 +9,7 @@
 #include <chrono>
 using namespace std;
 using namespace json;
-static const uint32_t ntimes = 100;
+static const uint32_t ntimes = 10;
 
 int main(int argc, char **arg)
 {   
@@ -36,35 +36,35 @@ int main(int argc, char **arg)
     /*
      * Performance Test
      */
-    chrono::steady_clock::time_point start_time;
-    chrono::steady_clock::time_point end_time;
-    chrono::microseconds us;
+    // chrono::steady_clock::time_point start_time;
+    // chrono::steady_clock::time_point end_time;
+    // chrono::microseconds us;
     
-    start_time = chrono::steady_clock::now();
-    for (uint32_t i = 0; i < ntimes; ++i) {
-        json_parser parser(s);
-        node = parser.parse();
-        releaseNode(node);
-        node = nullptr;
-    }
-    end_time = chrono::steady_clock::now();
-    us=(chrono::duration_cast<chrono::microseconds>(
-                               end_time - start_time));
-    cout << "[+] Finished successfully with an average of: " << (us.count() / ntimes) << " us\n";
+    // start_time = chrono::steady_clock::now();
+    // for (uint32_t i = 0; i < ntimes; ++i) {
+    //     json_parser parser(s);
+    //     node = parser.parse();
+    //     releaseNode(node);
+    //     node = nullptr;
+    // }
+    // end_time = chrono::steady_clock::now();
+    // us=(chrono::duration_cast<chrono::microseconds>(
+    //                            end_time - start_time));
+    // cout << "[+] Finished successfully with an average of: " << (us.count() / ntimes) << " us\n";
     
     /*
      * Function Test
      */
-    // try {
-    //     string ans;
-    //     json_parser parser(s);
-    //     node = parser.parse();
-    //     printNode(node,ans);
-    //     cout<<"equal = "<<(ans==s)<<endl;
-    //     releaseNode(node);
-    // } catch (const std::exception& ex) {
-    //     cerr << ex.what() << endl;
-    //     exit(-1);
-    // }
+    try {
+        string ans;
+        json_parser parser(s);
+        node = parser.parse();
+        printNode(node,ans);
+        cout<<"equal = "<<(ans==s)<<endl;
+        releaseNode(node);
+    } catch (const std::exception& ex) {
+        cerr << ex.what() << endl;
+        exit(-1);
+    }
 }
 
