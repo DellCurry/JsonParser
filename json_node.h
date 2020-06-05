@@ -43,7 +43,6 @@ namespace json{
         void add_to_map(std::string& key, json_node* node);
     private:
         node_type type;
-        std::string name;
         std::vector<std::string> seq_vec;
         union U {
             std::string num;

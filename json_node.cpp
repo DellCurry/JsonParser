@@ -1,6 +1,6 @@
 #include "json_node.h"
 #include <stdexcept>
-
+#include <iostream>
 namespace json{
 
     json_node::json_node(node_type type) {

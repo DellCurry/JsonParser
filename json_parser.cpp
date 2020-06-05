@@ -33,7 +33,10 @@ json::json_node* json_parser::parse() {
 			}
 			if (on_status(EXPECT_OBJ_VAL)) {
 				std::string key = stack->top()->get_string();
+				json::json_node* top;
+				top =  stack->top();
 				stack->pop();
+				delete top;
 				stack->top()->add_to_map(key, json::json_node::create_bool_node(tk_reader->bool_reader()));
 				stack->top()->add_to_seq_vec(key);
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
@@ -55,8 +58,13 @@ json::json_node* json_parser::parse() {
 			}
 			if (on_status(EXPECT_OBJ_VAL)) {
 				std::string key = stack->top()->get_string();
+				json::json_node* top;
+				top =  stack->top();
 				stack->pop();
-				stack->top()->add_to_map(key, json::json_node::create_num_node(tk_reader->number_reader()));
+				delete top;
+				json::json_node* newnode = json::json_node::create_num_node(tk_reader->number_reader());
+				stack->top()->add_to_map(key, newnode);
+				newnode = nullptr;
 				stack->top()->add_to_seq_vec(key);
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
 				continue;
@@ -79,7 +87,10 @@ json::json_node* json_parser::parse() {
 			if (on_status(EXPECT_OBJ_VAL)) {
 				tk_reader->null_reader();
 				std::string key = stack->top()->get_string();
+				json::json_node* top;
+				top =  stack->top();
 				stack->pop();
+				delete top;
 				stack->top()->add_to_map(key, json::json_node::create_null_node());
 				stack->top()->add_to_seq_vec(key);
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
@@ -107,7 +118,10 @@ json::json_node* json_parser::parse() {
 			}
 			if (on_status(EXPECT_OBJ_VAL)) {
 				std::string key = stack->top()->get_string();
+				json::json_node* top;
+				top =  stack->top();
 				stack->pop();
+				delete top;
 				stack->top()->add_to_map(key, json::json_node::create_str_node(tk_reader->string_reader()));
 				stack->top()->add_to_seq_vec(key);
 				status = EXPECT_COMMA | EXPECT_END_OBJ;
@@ -173,7 +187,10 @@ json::json_node* json_parser::parse() {
 				if (type == json::STRING) {
 					// key: [ CURRENT ] ,}
 					std::string key = stack->top()->get_string();
+					json::json_node* top;
+					top =  stack->top();
 					stack->pop();
+					delete top;
 					stack->top()->add_to_map(key, tempArray);
 					stack->top()->add_to_seq_vec(key);
 					status = EXPECT_COMMA | EXPECT_END_OBJ;
@@ -201,7 +218,10 @@ json::json_node* json_parser::parse() {
 				if (type == json::STRING) {
 					// key: { CURRENT } ,}
 					std::string key = stack->top()->get_string();
+					json::json_node* top;
+					top =  stack->top();
 					stack->pop();
+					delete top;
 					stack->top()->add_to_map(key, tempObject);
 					stack->top()->add_to_seq_vec(key);
 					status = EXPECT_COMMA | EXPECT_END_OBJ;
